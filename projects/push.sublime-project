@@ -3,11 +3,36 @@
 	[
 		{
 			"path": ".."
+		},
+		{
+			"path": "../src"
 		}
 	],
-    "settings":
+  "settings":
+  {
+      // The number of spaces a tab is considered equal to
+      "tab_size": 2
+  },
+  "build_systems":
+  [
     {
-        // The number of spaces a tab is considered equal to
-        "tab_size": 2
+      "name": "Compile to lua",
+      "cmd": ["moonc", "."],
+      "file_regex": "([\\w/.]*.\\.moon)",
+      "line_regex": " \\[(.*?)\\] >>",
+      "working_dir": "${project_path}/../src",
+
+      "variants": 
+      [
+        { 
+          "cmd": ["moon", "${file}"],
+          "name": "Run"
+        },
+        {
+          "cmd": ["moon", "${file_base_name}_test.moon"],
+          "name": "Run Test"
+        }
+      ]
     }
+  ]
 }
