@@ -37,16 +37,17 @@ do
     run = run + 1
     return p() + 2
   end)
-  assert(c() == 3)
-  assert(run == 1)
-  assert(c() == 3)
-  assert(run == 1)
+  local check
+  check = function(val, r)
+    assert(c() == val, c())
+    return assert(run == r, run)
+  end
+  check(3, 1)
+  check(3, 1)
   p(5)
-  assert(c() == 7)
-  assert(run == 2)
+  check(7, 2)
   p(-4)
-  assert(c() == -2)
-  assert(run == 3)
+  check(-2, 3)
 end
 do
   local a = push.property(5)
@@ -76,11 +77,9 @@ do
   check(136, 2)
   b(false)
   check(1, 2)
-end
-do
-  local result, err = pcall(push.computed, function()
+  assert(not pcall(push.computed, function()
     return error("msg")
-  end)
+  end))
 end
 do
   local first = push.property("john")
@@ -101,14 +100,17 @@ do
   full:push_to(function(nv)
     changes = changes + 1
   end)
-  assert(full() == "john doe")
-  assert(changes == 0, changes)
-  assert(full("mike foe") == "mike foe")
-  assert(changes == 1, changes)
+  local check
+  check = function(val, c)
+    assert(full() == val, full())
+    return assert(changes == c, changes)
+  end
+  check("john doe", 0)
+  check(full("mike foe"), 1)
   first("john")
-  assert(full() == "john foe")
-  assert(changes == 2, changes)
+  check("john foe", 2)
   full("asfd")
   assert(first() == "")
-  return assert(last() == "")
+  assert(last() == "")
+  return print("All tests passed!")
 end

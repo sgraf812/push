@@ -34,7 +34,7 @@ local mt = {
           return "(proxied) " .. tostring(self)
         end,
         __index = self,
-        __call = function(self, t, nv)
+        __call = function(t, nv)
           if nv ~= nil then
             return self(proxy(nv))
           else
@@ -120,10 +120,11 @@ computed = function(reader, writer, name)
         p.__updating = true
         local status, res = pcall(writer, nv)
         p.__updating = false
-        if not status then
-          error(res)
+        if status then
+          return res
+        else
+          return error(res)
         end
-        return res
       end
     end)
   end

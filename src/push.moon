@@ -19,7 +19,7 @@ mt =
       setmetatable {},
         __tostring: (t) -> "(proxied) " .. tostring @
         __index: @
-        __call: (t, nv) => 
+        __call: (t, nv) -> 
           if nv != nil then @ proxy nv else @!
 
 

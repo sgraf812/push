@@ -96,3 +96,5 @@ do -- computed writer
   full("asfd")
   assert first! == ""
   assert last! == ""
+
+  print "All tests passed!"
