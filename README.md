@@ -5,13 +5,13 @@ Lua library implementing knockout.js-like observable properties.
 ## Table Of Contents
 1. [Basics](#zzz)
     - [Properties](#properties)
-    - [Push notifications](#push-notifications-)
-    - [Readonly](#readonly-a-writeproxy-example-)
-    - [Computed properties](#computed-properties-)
-2. [The nifty stuff](#the-nifty-stuff-)
-    - [Recording data dependencies](#record-pulls-)
-    - [Writeproxies](#introduce-a-new-writeproxy-)
-3. [Recap for extensiblity](#recap-for-extensibility-)
+    - [Push notifications](#push-notifications)
+    - [Readonly](#readonly-a-writeproxy-example)
+    - [Computed properties](#computed-properties)
+2. [The nifty stuff](#the-nifty-stuff)
+    - [Recording data dependencies](#record-pulls)
+    - [Writeproxies](#introduce-a-new-writeproxy)
+3. [Recap for extensiblity](#recap-for-extensibility)
 
 ## So... what exactly?
 When dealing with keeping multiple data layers in sync as common in GUIs (View-ViewModel or View-Model relations), it is easy to introduce bugs and unfocused code blocks. 
