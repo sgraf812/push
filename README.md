@@ -150,3 +150,75 @@ return assert(c() == 12) -- but when b changes, the new value of a is used
 ```
 This where all basic features.
 
+## The nifty stuff
+If you feel comfortable with using *push* (which should not take that long), you might desire some seams for extensibility. If those *push* provides you are not generic enough, open an issue please.
+
+### Record pulls
+If you need to know from which properties a function acquires its data, use `record_pulls(func)`. 
+It executes `func` and monitors any accessed properties.
+These are returned as well as the result of the function execution.
+In case `func` errors, it returns the (false, err) tuple.
+```
+a = push.property true
+b = push.property 5
+unused = push.property!
+func = -> if a! then b! else unused!
+pulls, result = push.record_pulls func
+assert result == b!
+assert pulls[a] == a
+assert pulls[b] == b
+assert pulls[unused] == nil
+```
+```
+local a = push.property(true)
+local b = push.property(5)
+local unused = push.property()
+local func
+func = function()
+  if a() then
+    return b()
+  else
+    return unused()
+  end
+end
+local pulls, result = push.record_pulls(func)
+assert(result == b())
+assert(pulls[a] == a)
+assert(pulls[b] == b)
+return assert(pulls[unused] == nil)
+```
+
+### Introduce a new writeproxy
+As I captioned earlier, `readonly()` is a simple writeproxy. It is also used in `computed()` to wire up the writer with the actual setter.
+You can look at the implementation of those to get a feel, but I will also guide you through implementing a basic range restrictor for numeric values.
+`writeproxy` takes a unary function which gets passed the value when the property is set. 
+It's your responsibility to process that value and then return what the properties new value should be 
+(By the way, that's why most of the text here is code... That paragraph reads horribly). Only using moonscript from now on.
+Say our new decorator should be called like
+```
+r = filter between(5, 10), push.property 7
+assert r(11) == 7
+assert r(6) == 6
+```
+This is actually flawed from adesign perspective (what if the prop is modified though another accessor or you want in/exclusive bounds?), but looks appealing.
+`between(from, to)` returns a simple predicate:
+```
+between = (f, t) -> 
+  (v) -> v >= f and v <= t
+```
+and `filter(pred, prop) can be implemented like
+```
+filter = (pred, prop) ->
+  prop\writeproxy (nv) ->
+    if pred nv then nv else prop!
+```
+The last line reads 'If the new value matches the predicate, return (and therefore set) the new value, else the current value.'
+You and I could spin that even further to improve the syntax and come up with solutions for the accessor problem... But at least for me that'll have to wait.
+This enables you to write even more elaborate things I can't even think of at the moment.
+
+## Recap for extensibility
+In short, you just need to be aware of these three seams to extend *push* in a proper way:
+
+1. `push_to()` notifications (notifies even if not written through the setter, but after the value changed)
+2. `writeproxy()` for write interceptions through the local setter
+3. `record_pulls()` if you want to where a particular piece of code pulls its data from.
