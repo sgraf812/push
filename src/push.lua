@@ -61,7 +61,7 @@ record_pulls = function(f)
   local sources = { }
   local rec
   rec = function(p)
-    return table.insert(sources, p)
+    sources[p] = p
   end
   recorders[rec] = rec
   local status, res = pcall(f)
@@ -100,9 +100,7 @@ computed = function(reader, writer, name)
           remover()
         end
       end
-      local _list_0 = newfroms
-      for _index_0 = 1, #_list_0 do
-        local f = _list_0[_index_0]
+      for f in pairs(newfroms) do
         if not p.__froms[f] then
           p.__froms[f] = f:push_to(update)
         end

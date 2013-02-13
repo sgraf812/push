@@ -31,6 +31,24 @@ do
   assert(val == "hi!")
 end
 do
+  local a = push.property(true)
+  local b = push.property(5)
+  local unused = push.property()
+  local func
+  func = function()
+    if a() then
+      return b()
+    else
+      return unused()
+    end
+  end
+  local pulls, result = push.record_pulls(func)
+  assert(result == b())
+  assert(pulls[a] == a)
+  assert(pulls[b] == b)
+  assert(pulls[unused] == nil)
+end
+do
   local p = push.property(1)
   local run = 0
   local c = push.computed(function()

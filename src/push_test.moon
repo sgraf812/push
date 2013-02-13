@@ -29,6 +29,17 @@ do -- subscribtion
   p("hello!")
   assert val == "hi!"
 
+do -- record_pulls
+  a = push.property true
+  b = push.property 5
+  unused = push.property!
+  func = -> if a! then b! else unused!
+  pulls, result = push.record_pulls func
+  assert result == b!
+  assert pulls[a] == a
+  assert pulls[b] == b
+  assert pulls[unused] == nil
+
 do -- computed reader
   p = push.property 1
   run = 0

@@ -2,7 +2,7 @@ recorders = {}
 
 
 mt = 
-  __tostring: => "Property " .. @.name .. ": " .. tostring(@.__value)
+  __tostring: => "Property " .. @name .. ": " .. tostring(@__value)
   __call: (nv) =>
     if nv != nil and nv != @__value
       @__value = nv
@@ -12,9 +12,9 @@ mt =
     return @__value
   __index:
     push_to: (pushee) => 
-      @.__tos[pushee] = pushee
-      return -> @.__tos[pushee] = nil -- remover
-    peek: => @.__value
+      @__tos[pushee] = pushee
+      return -> @__tos[pushee] = nil -- remover
+    peek: => @__value
     writeproxy: (proxy) =>
       setmetatable {},
         __tostring: (t) -> "(proxied) " .. tostring @
@@ -33,7 +33,7 @@ property = (v, name="<unnamed>") ->
 
 record_pulls = (f) ->
   sources = {}
-  rec = (p) -> table.insert sources, p
+  rec = (p) -> sources[p] = p
   recorders[rec] = rec
   status, res = pcall f
   recorders[rec] = nil
@@ -64,7 +64,7 @@ computed = (reader, writer, name = "<unnamed>") ->
           p.__froms[f] = nil
           remover!
       -- add Property sources
-      for f in *newfroms
+      for f in pairs newfroms
         if not p.__froms[f]
           p.__froms[f] = f\push_to update
       p res
