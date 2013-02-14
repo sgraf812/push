@@ -78,9 +78,9 @@ computed = (reader, writer, name = "<unnamed>") ->
       p.__updating = false
       if status then res else error res
 
-return with {}
-  .property = property
-  .name_of = name_of
-  .readonly = readonly
-  .computed = computed
-  .record_pulls = record_pulls
+return {
+  :property
+  :readonly
+  :computed
+  :record_pulls
+}

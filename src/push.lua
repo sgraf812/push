@@ -127,14 +127,9 @@ computed = function(reader, writer, name)
     end)
   end
 end
-return (function()
-  do
-    local _with_0 = { }
-    _with_0.property = property
-    _with_0.name_of = name_of
-    _with_0.readonly = readonly
-    _with_0.computed = computed
-    _with_0.record_pulls = record_pulls
-    return _with_0
-  end
-end)()
+return {
+  property = property,
+  readonly = readonly,
+  computed = computed,
+  record_pulls = record_pulls
+}

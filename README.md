@@ -59,7 +59,7 @@ assert(val == "bar")
 ```
 
 ### Readonly: A writeproxy example
-The usual OO info hiding stuff: Restrict clients to get access, while internally being able to set stuff. The implementation demonstrates a possible usage of the writeproxy method.
+The usual OO info hiding stuff: Restrict clients to get access, while internally being able to mutate. The implementation demonstrates a possible usage of the writeproxy method.
 ```
 p = push.property "zazoo"
 get = push.readonly p -- proxies writes to error
@@ -78,7 +78,7 @@ return assert(get() == "kazoom")
 ```
 
 ### Computed properties
-This is the main reason to use *push*. It makes binding form fields a calk walk, because property changes are literally pushed into each dependant property, thereby using a reasonable caching policy:
+This is the main reason to use *push*. It makes binding form fields a cake walk, because property changes are literally pushed into each dependant property, thereby using a reasonable caching policy:
 ```
 p = push.property "foo"
 buzzer = push.computed -> p! .. "buzz" -- the reader computes new dependent value
@@ -217,7 +217,7 @@ This is actually flawed from a design perspective (what if the prop is modified 
 between = (f, t) -> 
   (v) -> v >= f and v <= t
 ```
-and `filter(pred, prop) can be implemented like
+and `filter(pred, prop)` can be implemented like
 ```
 filter = (pred, prop) ->
   prop\writeproxy (nv) ->
