@@ -1,6 +1,8 @@
 # push
 
 Lua library implementing knockout.js-like observable properties.
+Without noticing it at the time of hacking this together, it now reminds me of a reactive programming style. 
+Yeah, just wanted to throw in the buzzword.
 
 ## Table Of Contents
 1. [Basics](#zzz)
